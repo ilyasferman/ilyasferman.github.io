@@ -1,4 +1,3 @@
 User-agent: *
 Allow: /
-
 Sitemap: https://ilyasferman.com/sitemap.xml
