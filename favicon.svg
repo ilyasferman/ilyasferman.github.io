@@ -1,5 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <rect width="64" height="64" rx="12" fill="#0d335b"/>
-  <rect x="8" y="10" width="4" height="44" rx="2" fill="#d5a12d"/>
-  <text x="22" y="42" font-family="Georgia,serif" font-size="27" font-weight="700" fill="#fff">IF</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="İF">
+  <rect width="64" height="64" rx="11" fill="#0d335b"/>
+  <rect x="10" y="10" width="3.5" height="44" rx="1.75" fill="#d6a53a"/>
+  <text x="39" y="43" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="30" font-weight="700" fill="#d6a53a">İF</text>
 </svg>
