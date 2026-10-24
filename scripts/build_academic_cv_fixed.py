@@ -4,15 +4,24 @@ ROOT = Path(__file__).resolve().parents[1]
 source_path = ROOT / 'scripts' / 'build_academic_cv.py'
 source = source_path.read_text(encoding='utf-8')
 
-# Robust public Zenodo search: match the ORCID or the creator name.
-ZENODO_ALL = 'https://zenodo.org/search?q=0000-0003-4844-3508%20OR%20%22%C4%B0lyas%20Ferman%22'
+# Zenodo: exact creator-field search so only İlyas Ferman records are listed.
+ZENODO_ALL = 'https://zenodo.org/search?q=metadata.creators.person_or_org.name%3A%22Ferman%2C%20%C4%B0lyas%22&l=list&p=1&s=10&sort=newest'
 
 # Zenodo: top button and CV profile link should list all works.
 source = source.replace("ZENODO_URL=CHAPTER_URL", f"ZENODO_URL='{ZENODO_ALL}'")
 source = source.replace("('Zenodo - Kitap Bölümü',ZENODO_URL)", "('Zenodo - Tüm Çalışmalar',ZENODO_URL)")
 source = source.replace(
     "html=html.replace('https://zenodo.org/search?q=%220000-0003-4844-3508%22', ZENODO_URL)",
-    "html=html.replace('https://zenodo.org/search?q=%220000-0003-4844-3508%22', ZENODO_URL)\n    html=html.replace('https://zenodo.org/search?q=creators.orcid%3A%220000-0003-4844-3508%22', ZENODO_URL)\n    html=html.replace(CHAPTER_URL, ZENODO_URL)"
+    "html=html.replace('https://zenodo.org/search?q=%220000-0003-4844-3508%22', ZENODO_URL)\n"
+    "    html=html.replace('https://zenodo.org/search?q=creators.orcid%3A%220000-0003-4844-3508%22', ZENODO_URL)\n"
+    "    html=html.replace('https://zenodo.org/search?q=0000-0003-4844-3508%20OR%20%22%C4%B0lyas%20Ferman%22', ZENODO_URL)\n"
+    "    html=html.replace(CHAPTER_URL, ZENODO_URL)"
+)
+
+# CV certificate thumbnails: open the standalone large certificate viewer, not the homepage.
+source = source.replace(
+    "url='https://ilyasferman.com/?cert='+ci['key']+'#sertifikalar'",
+    "url='https://ilyasferman.com/certificate.html?cert='+ci['key']"
 )
 
 # CV: preserve the existing PDF design, only improve vertical spacing.
