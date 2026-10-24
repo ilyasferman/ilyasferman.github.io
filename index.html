@@ -433,14 +433,40 @@
       newTab.hidden = true;
       openModal(button.dataset.title);
     }));
-    const requestedCertificate = new URLSearchParams(window.location.search).get('cert');
+    const queryParams = new URLSearchParams(window.location.search);
+    const requestedCertificate = queryParams.get('cert');
+    let restoreCvOnClose = Boolean(requestedCertificate);
+
+    function restoreCv(){
+      htmlViewer.hidden = true;
+      htmlViewer.replaceChildren();
+      frame.src = 'cv/ilyas-ferman-akademik-cv.pdf#page=2&view=FitH';
+      frame.hidden = false;
+      newTab.href = 'cv/ilyas-ferman-akademik-cv.pdf';
+      newTab.hidden = false;
+      modalTitle.textContent = 'İlyas Ferman · Akademik CV';
+      restoreCvOnClose = false;
+      history.replaceState(null, '', window.location.pathname);
+      openModal('İlyas Ferman · Akademik CV');
+    }
+
     if(requestedCertificate){
+      frame.src = 'cv/ilyas-ferman-akademik-cv.pdf#page=2&view=FitH';
       const certificateButton = document.querySelector('.certificate-trigger[data-template="' + requestedCertificate + '"]');
       if(certificateButton) setTimeout(() => certificateButton.click(), 0);
     }
-    closeButton.addEventListener('click', closeModal);
-    modal.addEventListener('click', event => { if(event.target === modal) closeModal(); });
-    document.addEventListener('keydown', event => { if(event.key === 'Escape' && !modal.hidden) closeModal(); });
+
+    function handleDocumentClose(){
+      if(restoreCvOnClose && !htmlViewer.hidden){
+        restoreCv();
+        return;
+      }
+      closeModal();
+    }
+
+    closeButton.addEventListener('click', handleDocumentClose);
+    modal.addEventListener('click', event => { if(event.target === modal) handleDocumentClose(); });
+    document.addEventListener('keydown', event => { if(event.key === 'Escape' && !modal.hidden) handleDocumentClose(); });
   </script>
 </body>
 </html>
