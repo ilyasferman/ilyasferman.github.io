@@ -1,0 +1,39 @@
+name: Rebuild academic CV
+
+on:
+  push:
+    paths:
+      - 'scripts/build_academic_cv.py'
+      - '.github/workflows/rebuild-academic-cv.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-cv:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y fonts-dejavu-core
+          python -m pip install --upgrade pip
+          pip install reportlab
+      - name: Build CV and patch site
+        run: python scripts/build_academic_cv.py
+      - name: Commit generated CV and site update
+        run: |
+          git config user.name "ilyasferman"
+          git config user.email "iferman92@gmail.com"
+          git add cv/ilyas-ferman-akademik-cv.pdf index.html
+          if ! git diff --cached --quiet; then
+            git commit -m "Update CV, academic works, certificate gallery and Zenodo link"
+            git push
+          fi
