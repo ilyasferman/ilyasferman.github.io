@@ -120,7 +120,7 @@
             <a class="btn btn-light" href="https://orcid.org/0000-0003-4844-3508" target="_blank" rel="noopener"><span class="logo-dot orcid">iD</span> ORCID</a>
             <a class="btn btn-light" href="https://scholar.google.com/citations?user=lYZXEKEAAAAJ&hl=tr" target="_blank" rel="noopener"><span class="logo-dot scholar">◆</span> Google Scholar</a>
             <a class="btn btn-light" href="https://www.researchgate.net/profile/Ilyas-Ferman-2" target="_blank" rel="noopener"><span class="logo-dot rg">RG</span> ResearchGate</a>
-            <a class="btn btn-light" href="https://zenodo.org/search?q=%220000-0003-4844-3508%22" target="_blank" rel="noopener"><span class="logo-dot scholar">Z</span> Zenodo</a>
+            <a class="btn btn-light" href="https://zenodo.org/records/23544985" target="_blank" rel="noopener"><span class="logo-dot scholar">Z</span> Zenodo</a>
           </div>
         </div>
       </div>
@@ -134,7 +134,7 @@
         </article>
 
         <article class="card research-card" id="arastirma">
-          <div class="card-head"><div class="head-left"><span class="gold-icon">▮▮</span><h2>Araştırma Alanları</h2></div><a href="#research-detail">Daha fazla <span>→</span></a></div>
+          <div class="card-head"><div class="head-left"><span class="gold-icon">▮▮</span><h2>Araştırma Alanları</h2></div></div>
           <div class="research-grid">
             <div><span class="tile-icon">♟</span><strong>Yönetim ve<br>Organizasyon</strong></div>
             <div><span class="tile-icon">▥</span><strong>Stratejik Yönetim</strong></div>
@@ -214,19 +214,8 @@
         </article>
       </div>
     </section>
-
-    <section class="detail-section soft" id="research-detail">
-      <div class="section-title"><p>ARAŞTIRMA ODAKLARI</p><h2>Yönetim bilimi ile saha deneyimini buluşturan çalışma alanları</h2></div>
-      <div class="focus-grid">
-        <article><span>01</span><h3>Yönetim ve Organizasyon</h3><p>Örgütsel yapı, yönetim süreçleri, çalışan deneyimi ve kurumların işleyişi.</p></article>
-        <article><span>02</span><h3>Sağlık Hizmetleri Yönetimi</h3><p>Sağlık hizmetlerinin örgütlenmesi, insan kaynağı, süreç yönetimi ve hizmet sunumu.</p></article>
-        <article><span>03</span><h3>Yönetim Bilişim Sistemleri</h3><p>Bilgi sistemlerinin yönetim süreçleriyle bütünleşmesi, dijitalleşme ve teknoloji uyumu.</p></article>
-        <article><span>04</span><h3>Stratejik Yönetim ve Örgütsel Davranış</h3><p>Kurumsal karar alma, çalışan davranışı, performans ve örgütsel uyum.</p></article>
-      </div>
-    </section>
-
     <section class="detail-section" id="sertifikalar">
-      <div class="section-title"><p>SEÇİLMİŞ EĞİTİMLER</p><h2>Sertifikalar ve mesleki gelişim</h2></div>
+      <div class="section-title"><h2>Sertifikalar</h2></div>
       <div class="certificate-grid">
         <button class="certificate-card certificate-trigger" type="button" data-template="cert-istanbul" data-title="Temel SPSS ile Nicel Veri Analizi Eğitimi">
           <span class="cert-preview"><span class="cert-sheet landscape"><span class="mini-inst">T.C. İstanbul Üniversitesi</span><span class="mini-cert">SERTİFİKA</span><span class="mini-name">İLYAS FERMAN</span><span class="mini-course">Temel SPSS ile Nicel Veri Analizi Eğitimi</span></span></span>
@@ -258,15 +247,6 @@
         </button>
       </div>
       <p class="privacy-note">Not: Web önizlemelerinde T.C. kimlik numarası, barkod ve karekod gibi doğrulama bilgileri güvenlik amacıyla gösterilmez; eğitim ve sertifika bilgileri korunur.</p>
-    </section>
-
-    <section class="thesis-feature">
-      <div>
-        <p class="mini-kicker">YÜKSEK LİSANS TEZİ</p>
-        <h2>112 Acil Servis Çalışanlarının İş Güçlüğü ve İş Riski Sorunları; Ordu İli 112 Acil Servis Çalışanları Üzerinde Bir Araştırma</h2>
-        <p>Giresun Üniversitesi · Sosyal Bilimler Enstitüsü · İşletme · 2022 · Danışman: Doç. Dr. İhsan Cora · YÖK Tez No: 747495</p>
-      </div>
-      <a class="btn btn-primary" href="https://doi.org/10.5281/zenodo.23146579" target="_blank" rel="noopener">Tezi Zenodo'da Görüntüle <span>↗</span></a>
     </section>
   </main>
 
@@ -453,6 +433,11 @@
       newTab.hidden = true;
       openModal(button.dataset.title);
     }));
+    const requestedCertificate = new URLSearchParams(window.location.search).get('cert');
+    if(requestedCertificate){
+      const certificateButton = document.querySelector('.certificate-trigger[data-template="' + requestedCertificate + '"]');
+      if(certificateButton) setTimeout(() => certificateButton.click(), 0);
+    }
     closeButton.addEventListener('click', closeModal);
     modal.addEventListener('click', event => { if(event.target === modal) closeModal(); });
     document.addEventListener('keydown', event => { if(event.key === 'Escape' && !modal.hidden) closeModal(); });
