@@ -18,10 +18,11 @@ source = source.replace(
     "    html=html.replace(CHAPTER_URL, ZENODO_URL)"
 )
 
-# CV certificate thumbnails: open the standalone large certificate viewer, not the homepage.
+# CV certificate thumbnails: open the site's certificate modal and mark that the click came from the CV.
+# The page then restores the CV (page 2) when the certificate X button is pressed.
 source = source.replace(
     "url='https://ilyasferman.com/?cert='+ci['key']+'#sertifikalar'",
-    "url='https://ilyasferman.com/certificate.html?cert='+ci['key']"
+    "url='https://ilyasferman.com/?cert='+ci['key']+'&from=cv'"
 )
 
 # CV: preserve the existing PDF design, only improve vertical spacing.
@@ -40,3 +41,54 @@ source = source.replace(
 
 # Execute the corrected generator without changing the original reusable source.
 exec(compile(source, str(source_path), 'exec'), {'__file__': str(source_path), '__name__': '__main__'})
+
+# When a certificate is opened from the PDF, X should return to the CV instead of the homepage.
+index_path = ROOT / 'index.html'
+html = index_path.read_text(encoding='utf-8')
+old = """    const requestedCertificate = new URLSearchParams(window.location.search).get('cert');
+    if(requestedCertificate){
+      const certificateButton = document.querySelector('.certificate-trigger[data-template=\"' + requestedCertificate + '\"]');
+      if(certificateButton) setTimeout(() => certificateButton.click(), 0);
+    }
+    closeButton.addEventListener('click', closeModal);
+    modal.addEventListener('click', event => { if(event.target === modal) closeModal(); });
+    document.addEventListener('keydown', event => { if(event.key === 'Escape' && !modal.hidden) closeModal(); });"""
+new = """    const queryParams = new URLSearchParams(window.location.search);
+    const requestedCertificate = queryParams.get('cert');
+    let restoreCvOnClose = Boolean(requestedCertificate);
+
+    function restoreCv(){
+      htmlViewer.hidden = true;
+      htmlViewer.replaceChildren();
+      frame.src = 'cv/ilyas-ferman-akademik-cv.pdf#page=2&view=FitH';
+      frame.hidden = false;
+      newTab.href = 'cv/ilyas-ferman-akademik-cv.pdf';
+      newTab.hidden = false;
+      modalTitle.textContent = 'İlyas Ferman · Akademik CV';
+      restoreCvOnClose = false;
+      history.replaceState(null, '', window.location.pathname);
+      openModal('İlyas Ferman · Akademik CV');
+    }
+
+    if(requestedCertificate){
+      frame.src = 'cv/ilyas-ferman-akademik-cv.pdf#page=2&view=FitH';
+      const certificateButton = document.querySelector('.certificate-trigger[data-template=\"' + requestedCertificate + '\"]');
+      if(certificateButton) setTimeout(() => certificateButton.click(), 0);
+    }
+
+    function handleDocumentClose(){
+      if(restoreCvOnClose && !htmlViewer.hidden){
+        restoreCv();
+        return;
+      }
+      closeModal();
+    }
+
+    closeButton.addEventListener('click', handleDocumentClose);
+    modal.addEventListener('click', event => { if(event.target === modal) handleDocumentClose(); });
+    document.addEventListener('keydown', event => { if(event.key === 'Escape' && !modal.hidden) handleDocumentClose(); });"""
+if old in html:
+    html = html.replace(old, new)
+else:
+    raise RuntimeError('Expected certificate modal close block was not found in index.html')
+index_path.write_text(html, encoding='utf-8')
