@@ -4,14 +4,15 @@ ROOT = Path(__file__).resolve().parents[1]
 source_path = ROOT / 'scripts' / 'build_academic_cv.py'
 source = source_path.read_text(encoding='utf-8')
 
-ZENODO_ALL = 'https://zenodo.org/search?q=creators.orcid%3A%220000-0003-4844-3508%22'
+# Robust public Zenodo search: match the ORCID or the creator name.
+ZENODO_ALL = 'https://zenodo.org/search?q=0000-0003-4844-3508%20OR%20%22%C4%B0lyas%20Ferman%22'
 
-# Zenodo: top button and CV profile link should list all works by ORCID.
+# Zenodo: top button and CV profile link should list all works.
 source = source.replace("ZENODO_URL=CHAPTER_URL", f"ZENODO_URL='{ZENODO_ALL}'")
 source = source.replace("('Zenodo - Kitap Bölümü',ZENODO_URL)", "('Zenodo - Tüm Çalışmalar',ZENODO_URL)")
 source = source.replace(
     "html=html.replace('https://zenodo.org/search?q=%220000-0003-4844-3508%22', ZENODO_URL)",
-    "html=html.replace('https://zenodo.org/search?q=%220000-0003-4844-3508%22', ZENODO_URL)\n    html=html.replace(CHAPTER_URL, ZENODO_URL)"
+    "html=html.replace('https://zenodo.org/search?q=%220000-0003-4844-3508%22', ZENODO_URL)\n    html=html.replace('https://zenodo.org/search?q=creators.orcid%3A%220000-0003-4844-3508%22', ZENODO_URL)\n    html=html.replace(CHAPTER_URL, ZENODO_URL)"
 )
 
 # CV: preserve the existing PDF design, only improve vertical spacing.
