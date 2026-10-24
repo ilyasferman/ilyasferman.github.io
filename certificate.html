@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sertifika | İlyas Ferman</title>
+  <meta name="robots" content="noindex,follow">
+  <link rel="stylesheet" href="assets/site-final.css">
+  <style>
+    html,body{margin:0;min-height:100%;background:#eef2f5}
+    body{padding:24px;font-family:Arial,sans-serif}
+    .certificate-only{max-width:1120px;margin:0 auto}
+    .certificate-only .document-privacy{margin:0 0 12px}
+    .certificate-only .certificate-page{margin:0 auto 22px;box-shadow:0 12px 38px rgba(13,51,91,.16)}
+    .certificate-error{max-width:720px;margin:80px auto;padding:28px;background:#fff;border-radius:14px;color:#24384d;text-align:center}
+    @media (max-width:700px){body{padding:10px}.certificate-only .certificate-page{transform-origin:top center}}
+  </style>
+</head>
+<body>
+  <main id="certificate-viewer" class="certificate-only" aria-live="polite"></main>
+  <script>
+    const params = new URLSearchParams(location.search);
+    const certId = params.get('cert');
+    const viewer = document.getElementById('certificate-viewer');
+    const titles = {
+      'cert-istanbul':'Temel SPSS ile Nicel Veri Analizi Eğitimi',
+      'cert-kasem-tr':'SPSS Eğitimi · Türkçe',
+      'cert-kasem-en':'SPSS Training · English',
+      'cert-yonetim':'Yönetim Süreçleri ve İlkeleri',
+      'cert-kamu':'Kamu Etiği ve Kamu Görevlileri Etik Davranış İlkeleri',
+      'cert-insan':'İnsan Hakları Çerçevesinde Etik',
+      'cert-stres':'İş Yerinde Stres'
+    };
+    if (titles[certId]) document.title = titles[certId] + ' | İlyas Ferman';
+    fetch('index.html', {cache:'no-store'})
+      .then(r => r.text())
+      .then(html => {
+        const doc = new DOMParser().parseFromString(html, 'text/html');
+        const template = certId ? doc.getElementById(certId) : null;
+        if (!template || template.tagName !== 'TEMPLATE') throw new Error('not-found');
+        viewer.replaceChildren(template.content.cloneNode(true));
+      })
+      .catch(() => {
+        viewer.innerHTML = '<div class="certificate-error"><strong>Sertifika görüntüsü bulunamadı.</strong></div>';
+      });
+  </script>
+</body>
+</html>
