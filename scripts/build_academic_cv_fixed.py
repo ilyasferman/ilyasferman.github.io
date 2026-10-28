@@ -19,10 +19,10 @@ source = source.replace(
     "    html=html.replace(CHAPTER_URL, ZENODO_URL)"
 )
 
-# OSF: add the academic profile to the PDF CV.
+# OSF: add the academic profile to the PDF CV after ResearchGate.
 source = source.replace(
-    "('ResearchGate','https://www.researchgate.net/profile/Ilyas-Ferman-2'),\n('Zenodo - Kitap Bölümü',ZENODO_URL),",
-    "('ResearchGate','https://www.researchgate.net/profile/Ilyas-Ferman-2'),\n('OSF','https://osf.io/3gntq/'),\n('Zenodo - Kitap Bölümü',ZENODO_URL),"
+    "('ResearchGate','https://www.researchgate.net/profile/Ilyas-Ferman-2'),\n('Zenodo - Tüm Çalışmalar',ZENODO_URL),",
+    "('ResearchGate','https://www.researchgate.net/profile/Ilyas-Ferman-2'),\n('OSF','https://osf.io/3gntq/'),\n('Zenodo - Tüm Çalışmalar',ZENODO_URL),"
 )
 
 # CV certificate thumbnails: open the site's certificate modal and mark that the click came from the CV.
