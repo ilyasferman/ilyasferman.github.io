@@ -22,6 +22,23 @@ Before any edit:
 4. Change only the requested feature.
 5. Verify GitHub Pages deployment completes successfully.
 
+## Homepage ↔ CV parallel-content rule
+
+The homepage and the academic CV are intended to stay substantially in sync for academic/profile content.
+
+Default rule: when İlyas asks to add an academic profile, publication, education item, professional/academic credential, contact/profile link, research-related item, or similar substantive profile information to the homepage, add the corresponding item to the CV as well unless he explicitly says not to.
+
+Likewise, if a substantive academic/profile item is added to the CV and it has a natural place on the homepage, keep the homepage synchronized.
+
+Exceptions are presentation-only website elements that do not belong in a CV, such as navigation controls, button styling, responsive layout, modal UI, visual decoration, animation, or other interface-only changes.
+
+When making a parallel homepage + CV update:
+- Start from the current latest working `main` state.
+- Preserve the existing layout and wording conventions of each surface.
+- Do not treat the CV as a separate stale artifact.
+- If the CV must be regenerated, preserve certificate links/annotations and the `from=cv` return behavior.
+- After regeneration, verify both the homepage and the CV-specific behavior before considering the task complete.
+
 ## Current website structure
 
 Main file:
@@ -123,6 +140,7 @@ Do not add a second legacy `requestedCertificate` block before this logic.
 For a normal request such as “add this account/link/text to my site”:
 - Fetch current `main`.
 - Patch only the exact requested location(s).
+- For substantive academic/profile content, apply the homepage ↔ CV parallel-content rule above.
 - Do not touch CV generator unless the requested change must also appear inside the PDF CV.
 - If CV must change, preserve certificate URL annotations and the `from=cv` return behavior.
 - After any CV-related change, inspect final `index.html` for duplicate JS declarations and confirm Pages deployment success.
