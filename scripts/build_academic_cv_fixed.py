@@ -111,6 +111,6 @@ new = """    const queryParams = new URLSearchParams(window.location.search);
     document.addEventListener('keydown', event => { if(event.key === 'Escape' && !modal.hidden) handleDocumentClose(); });"""
 if old in html:
     html = html.replace(old, new)
-else:
-    raise RuntimeError('Expected certificate modal close block was not found in index.html')
+elif "function restoreCv(){" not in html:
+    raise RuntimeError('Certificate modal close logic was not found in index.html')
 index_path.write_text(html, encoding='utf-8')
