@@ -6,6 +6,7 @@ source = source_path.read_text(encoding='utf-8')
 
 # Zenodo: exact creator-field search so only İlyas Ferman records are listed.
 ZENODO_ALL = 'https://zenodo.org/search?q=metadata.creators.person_or_org.name%3A%22Ferman%2C%20%C4%B0lyas%22&l=list&p=1&s=10&sort=newest'
+OSF_URL = 'https://osf.io/3gntq/'
 
 # Zenodo: top button and CV profile link should list all works.
 source = source.replace("ZENODO_URL=CHAPTER_URL", f"ZENODO_URL='{ZENODO_ALL}'")
@@ -16,6 +17,12 @@ source = source.replace(
     "    html=html.replace('https://zenodo.org/search?q=creators.orcid%3A%220000-0003-4844-3508%22', ZENODO_URL)\n"
     "    html=html.replace('https://zenodo.org/search?q=0000-0003-4844-3508%20OR%20%22%C4%B0lyas%20Ferman%22', ZENODO_URL)\n"
     "    html=html.replace(CHAPTER_URL, ZENODO_URL)"
+)
+
+# OSF: add the academic profile to the PDF CV.
+source = source.replace(
+    "('ResearchGate','https://www.researchgate.net/profile/Ilyas-Ferman-2'),\n('Zenodo - Kitap Bölümü',ZENODO_URL),",
+    "('ResearchGate','https://www.researchgate.net/profile/Ilyas-Ferman-2'),\n('OSF','https://osf.io/3gntq/'),\n('Zenodo - Kitap Bölümü',ZENODO_URL),"
 )
 
 # CV certificate thumbnails: open the site's certificate modal and mark that the click came from the CV.
@@ -45,6 +52,21 @@ exec(compile(source, str(source_path), 'exec'), {'__file__': str(source_path), '
 # When a certificate is opened from the PDF, X should return to the CV instead of the homepage.
 index_path = ROOT / 'index.html'
 html = index_path.read_text(encoding='utf-8')
+
+# OSF: add to structured profile data, the top academic buttons and the footer links.
+html = html.replace(
+    '      "https://www.researchgate.net/profile/Ilyas-Ferman-2",\n      "https://doi.org/10.5281/zenodo.23146579",',
+    '      "https://www.researchgate.net/profile/Ilyas-Ferman-2",\n      "https://osf.io/3gntq/",\n      "https://doi.org/10.5281/zenodo.23146579",'
+)
+hero_osf = '            <a class="btn btn-light" href="https://osf.io/3gntq/" target="_blank" rel="noopener"><span class="logo-dot scholar">O</span> OSF</a>'
+hero_zenodo = '            <a class="btn btn-light" href="https://zenodo.org/search?q=metadata.creators.person_or_org.name%3A%22Ferman%2C%20%C4%B0lyas%22&l=list&p=1&s=10&sort=newest" target="_blank" rel="noopener"><span class="logo-dot scholar">Z</span> Zenodo</a>'
+if hero_osf not in html:
+    html = html.replace(hero_zenodo, hero_zenodo + '\n' + hero_osf)
+footer_osf = '        <a href="https://osf.io/3gntq/" target="_blank" rel="noopener">OSF</a>'
+footer_rg = '        <a href="https://www.researchgate.net/profile/Ilyas-Ferman-2" target="_blank" rel="noopener">ResearchGate</a>'
+if footer_osf not in html:
+    html = html.replace(footer_rg, footer_rg + '\n' + footer_osf)
+
 old = """    const requestedCertificate = new URLSearchParams(window.location.search).get('cert');
     if(requestedCertificate){
       const certificateButton = document.querySelector('.certificate-trigger[data-template=\"' + requestedCertificate + '\"]');
