@@ -67,6 +67,18 @@ footer_rg = '        <a href="https://www.researchgate.net/profile/Ilyas-Ferman-
 if footer_osf not in html:
     html = html.replace(footer_rg, footer_rg + '\n' + footer_osf)
 
+# If an earlier run left the legacy certificate query block above the new logic,
+# remove only that duplicate block. Two `const requestedCertificate` declarations
+# in the same script prevent all certificate JavaScript from running.
+legacy_requested_block = """    const requestedCertificate = new URLSearchParams(window.location.search).get('cert');
+    if(requestedCertificate){
+      const certificateButton = document.querySelector('.certificate-trigger[data-template=\"' + requestedCertificate + '\"]');
+      if(certificateButton) setTimeout(() => certificateButton.click(), 0);
+    }
+"""
+if "function restoreCv(){" in html and legacy_requested_block in html:
+    html = html.replace(legacy_requested_block, "", 1)
+
 old = """    const requestedCertificate = new URLSearchParams(window.location.search).get('cert');
     if(requestedCertificate){
       const certificateButton = document.querySelector('.certificate-trigger[data-template=\"' + requestedCertificate + '\"]');
