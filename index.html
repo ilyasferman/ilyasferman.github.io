@@ -436,11 +436,6 @@
       newTab.hidden = true;
       openModal(button.dataset.title);
     }));
-    const requestedCertificate = new URLSearchParams(window.location.search).get('cert');
-    if(requestedCertificate){
-      const certificateButton = document.querySelector('.certificate-trigger[data-template="' + requestedCertificate + '"]');
-      if(certificateButton) setTimeout(() => certificateButton.click(), 0);
-    }
     const queryParams = new URLSearchParams(window.location.search);
     const requestedCertificate = queryParams.get('cert');
     let restoreCvOnClose = Boolean(requestedCertificate);
