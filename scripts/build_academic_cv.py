@@ -104,8 +104,17 @@ c.setFont('DVSans-Bold',9.5); c.drawString(44,H-85,'Acil Tıp Teknisyeni')
 c.setFillColor(HexColor('#dbc980')); c.setFont('DVSans',7.1)
 c.drawString(44,H-99,'Yönetim ve Organizasyon  ·  Sağlık Hizmetleri Yönetimi  ·  Yönetim Bilişim Sistemleri')
 c.setFillColor(white); c.drawString(44,H-114,'Yalova, Türkiye   |   info@ilyasferman.com')
-photo=ROOT/'assets'/'profile.png'
-if photo.exists(): c.drawImage(str(photo),W-111,H-121,65,82,preserveAspectRatio=True,mask='auto')
+photo=ROOT/'assets'/'profile-20261122.webp'
+if photo.exists():
+    from PIL import Image
+    from reportlab.lib.utils import ImageReader
+    with Image.open(photo) as img:
+        img_width, img_height = img.size
+        crop_width = round(img_height * 65 / 82)
+        if img_width > crop_width:
+            left = (img_width - crop_width) // 2
+            img = img.crop((left, 0, left + crop_width, img_height))
+        c.drawImage(ImageReader(img),W-111,H-121,65,82,mask='auto')
 
 y=H-145
 y=section(c,y,'Profesyonel / Akademik Profil')
